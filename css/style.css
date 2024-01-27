@@ -12,33 +12,20 @@ ul{
     list-style: none;
 }
 
-.verde-off {
-    background-color: rgb(34, 124, 34);
-}
+
 .verde-on {
     background-color:green;
-}
-
-
-.rojo-off {
-    background-color: rgb(158, 32, 32);
 }
 .rojo-on {
     background-color: red;
 }
-
-.amarillo-off {
-    background-color: rgb(194, 194, 76);
-}
-
 .amarillo-on {
     background-color: yellow;
 }
-
-.azul-off{
-    background-color: rgb(42, 42, 158);
-}
-
 .azul-on{
     background-color: blue;
+}
+
+.oculto{
+    visibility: hidden;
 }

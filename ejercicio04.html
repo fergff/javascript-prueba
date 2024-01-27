@@ -20,43 +20,81 @@
     </head>
 
     <body>
-        <h1 id="resultado" class="text-center">Simon Say</h1>
+        <h1 class="text-center" id="puntaje">Simon Says</h1>
         <br/>
         <div class="d-flex justify-content-center">
             <div class="w-25 row">
-
-                <button class="w-50 h-100px border border-0 rounded amarillo-off" id="amarillo" onclick="tirar('amarillo')"></button>
-                <button class="w-50 h-100px border border-0 rounded azul-off" id="azul" onclick="tirar('azul')"></button>
-                <button class="w-50 h-100px border border-0 rounded rojo-off" id="rojo" onclick="tirar('rojo')"></button>
-                <button class="w-50 h-100px border border-0 rounded verde-off" id="verde" onclick="tirar('verde')"></button>
+                <button class="col-6 border rounded h-100px amarillo-on" id="amarillo" onclick="boton('amarillo')"></button>
+                <button class="col-6 border rounded h-100px azul-on" id="azul" onclick="boton('azul')"></button>
+                <button class="col-6 border rounded h-100px rojo-on" id="rojo" onclick="boton('rojo')"></button>
+                <button class="col-6 border rounded h-100px verde-on" id="verde" onclick="boton('verde')"></button>
             </div>
+            
+        </div>
+        <br/>
+        <div class="d-flex justify-content-center">
+            <button  class="border border-warning border-4 rounded" onclick="empezar()">Empezar</button>
         </div>
 
-
         <script>
-          async function tirar(idBoton) {
-    const boton = document.getElementById(idBoton);
-    switch (idBoton) {
-        case "amarillo":
-            boton.classList.toggle("amarillo-off");
-            boton.classList.toggle("amarillo-on");
-            await esperar(1000); // Espera 1 segundo
-            boton.classList.toggle("amarillo-off");
-            break;
-        case "azul":
-            boton.classList.toggle("azul-on");
-            await esperar(1000); // Espera 1 segundo
-            boton.classList.toggle("azul-off");
-            break;
-        case "rojo":
-            // Código para el botón rojo
-            break;
-        case "verde":
-            // Código para el botón verde
-            break;
-        default:
-            break;
+            let secuencia = [];
+let secuenciapulsada = [];
+const colores = ['amarillo', 'azul', 'rojo', 'verde'];
+let puntuacion = 0;
+const puntaje = document.getElementById('puntaje');
+
+function empezar() { //pone todo a 0
+    secuenciapulsada = [];
+    secuencia=[];
+    puntuacion=0;
+    puntaje.innerHTML = puntuacion;
+    generarSecuencia();
+}
+
+function generarSecuencia() { 
+    const colorAleatorio = colores[Math.floor(Math.random() * 4)]; //genero un color aleatorio de la lista colores
+    secuencia.push(colorAleatorio); // se lo meto a secuencia
+    reproducirSecuencia(0); //reproduzco la secuencia de 0
+}
+
+async function reproducirSecuencia(index) {
+    if (index < secuencia.length) {
+        await parpadearColor(secuencia[index]);
+        await esperar(500); // Espera 1 segundo despu�s de reproducir el color actual
+        reproducirSecuencia(index + 1); // Llama a la funci�n recursivamente para reproducir el siguiente color
     }
+}
+function boton(idBoton) {
+    parpadearColor(idBoton);
+    secuenciapulsada.push(idBoton);
+    if (secuencia.length === secuenciapulsada.length) { //cuando es igual el tama�o de las 2 secuencias comprueba
+        comprobar();
+    }
+}
+
+async function comprobar() {
+    for (let i = 0; i < secuencia.length; i++) {
+        if (secuencia[i] !== secuenciapulsada[i]) {// si no es igual
+            puntaje.innerHTML = "Simon Says";
+            secuenciapulsada = [];
+            puntuacion = 0;
+            secuencia = [];
+            return; // sale
+        }
+    }
+    // Si la secuencia es correcta
+    puntuacion++;
+    puntaje.innerHTML = puntuacion;
+    secuenciapulsada.length = 0; // Limpia la secuencia pulsada
+    await esperar(300);
+    generarSecuencia(); // Genera la siguiente secuencia
+}
+
+async function parpadearColor(idBoton) {
+    const boton = document.getElementById(idBoton);
+    boton.classList.add('oculto');
+    await esperar(200);
+    boton.classList.remove('oculto');
 }
 
 function esperar(ms) {
@@ -64,6 +102,7 @@ function esperar(ms) {
 }
 
         </script>
+        
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
