@@ -23,27 +23,8 @@
         <h1 class="text-center text-light">Lista Ejercicios</h1>
         <ul  class="text-center fs-2" id="listaEjercicios"></ul>
     
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const listaEjercicios = document.getElementById("listaEjercicios");
-    
-                // Array con el nombre de los archivos de ejercicios
-                const archivosEjercicios = ["ejercicio01", "ejercicio02", "ejercicio03", "ejercicio04"];
-                let cuenta=0;
-                archivosEjercicios.forEach(function (nombreEjercicio) {
-                    // Crear un enlace para cada ejercicio
-                    const enlace = document.createElement("a");
-                    enlace.href = nombreEjercicio + ".html";
-                    enlace.textContent = nombreEjercicio;
-    
-                    // Crear un elemento de lista y agregar el enlace
-                    const elementoLista = document.createElement("li");
-                    elementoLista.appendChild(enlace);
-    
-                    // Agregar el elemento de lista a la lista de ejercicios
-                    listaEjercicios.appendChild(elementoLista);
-                });
-            });
+        <script src="js/main.js">
+            
         </script>
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
