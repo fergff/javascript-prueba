@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const listaEjercicios = document.getElementById("listaEjercicios");
 
     // Array con el nombre de los archivos de ejercicios
-    const archivosEjercicios = ["ejercicio01", "ejercicio02", "ejercicio03", "ejercicio04"];
+    const archivosEjercicios = ["ejercicio01", "ejercicio02", "ejercicio03", "ejercicio04", "ejercicio05", "ejercicio06"];
     let cuenta=0;
     archivosEjercicios.forEach(function (nombreEjercicio) {
         // Crear un enlace para cada ejercicio

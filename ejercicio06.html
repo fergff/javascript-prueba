@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Dado</title>
+        <title>Test</title>
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta
@@ -19,18 +19,28 @@
         <link rel="stylesheet" href="css/style.css">
     </head>
 
-    <body>
+    <body class="px-5">
+        <div class="d-flex justify-content-between">
 
-        
-        <h1 id="resultado" class="text-center">Resultado </h1>
-
+            <h1 class="" id="high">High Score : 0</h1>
+            <h1 class="" id="contador">5</h1>
+        </div>
+        <h2 class="text-center" id="score">Score : </h2>
+        <br/>
+        <h3 class="text-center" id="problema"> Resolver</h3>
+        <br/>
         <div class="d-flex justify-content-center">
-            <button class="w-100px h-100px rounded" id="miBoton" onclick="tirar()">Dado</button>
+            <button class="h-100px w-100px rounded mx-2" onclick="comprobar(op1)"  id="op1">OP1</button>
+            <button class="h-100px w-100px rounded mx-2" onclick="comprobar(op2)"  id="op2">OP2</button>
+            <button class="h-100px w-100px rounded mx-2" onclick="comprobar(op3)"  id="op3">OP4</button>
+        </div>
+        <br/>
+        <div class="d-flex justify-content-center">
+            <button onclick="empezar()" id="bempezar" >Empezar</button>
         </div>
        
 
-
-        <script src="js/ejercicio01.js">
+        <script src="js/ejercicio06.js">
         </script>
 
         <script

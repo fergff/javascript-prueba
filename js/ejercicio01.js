@@ -1,9 +1,9 @@
 alert("hola mundoooo");
-    
+var miboton = document.getElementById("miBoton");
+var resultado = document.getElementById("resultado");
+
 function tirar(){
-        // Obtén el elemento del botón
-        var miboton = document.getElementById("miBoton");
-        var resultado = document.getElementById("resultado");
+        
     // Genera un número aleatorio y escribe en el botón
     let random = Math.floor(Math.random() * 6) + 1;
     miboton.innerHTML = random;

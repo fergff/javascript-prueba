@@ -29,3 +29,21 @@ ul{
 .oculto{
     visibility: hidden;
 }
+
+.tablero {
+    display: grid;
+    grid-template-columns: repeat(8, 40px); /* 8 columnas */
+    grid-template-rows: repeat(8, 40px); /* 8 filas */
+    gap: 1px; /* Espacio entre las celdas */
+}
+
+.celda {
+    width: 40px;
+    height: 40px;
+    border: 2px outset #777777; 
+    background-color: #eee; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
