@@ -11,13 +11,71 @@ for (let i = 0; i < 8; i++) {
     }
 }
 const celdas = document.querySelectorAll('.celda');
-//celda clikarla
+
 celdas.forEach(celda => {
     celda.addEventListener('click', () => {
         
-        alert("Celda clicada:"+ celda.dataset.row +" "+ celda.dataset.col);
+        alert("Celda clicada: " + celda.dataset.row + " " + celda.dataset.col);
+        alert(celda);
+        contarminas(celda , true);
+        
     });
 });
+
+function contarminas(celda ,deprimeras){
+
+    if (celda.classList.contains('checked')) { // para no hacer un bucle infinitoo
+        return;
+    }
+
+    let col = parseInt(celda.dataset.row);
+    let row = parseInt(celda.dataset.col);
+    let contarminass = 0;
+    let nohagas=true;
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            // Check if neighboring cells exist
+            if (row + i >= 0 && row + i < minas.length && col + j >= 0 && col + j < minas[0].length) {
+                // Skip the current cell
+                if (i === 0 && j === 0) {
+                    if(minas[row][col] === "*"&& deprimeras){
+                        alert("boooooom");
+                        break;
+                        
+                    }else if(minas[row][col] === "*"&& !deprimeras){
+                        nohagas=false;
+                    }
+                    
+                    continue;
+                }
+                if (minas[row + i][col + j] === "*") {
+                    contarminass++;
+                }
+            }
+        }
+    }
+    if(nohagas){
+        celda.innerHTML = contarminass;
+        celda.classList.add('checked'); // marca la celda checked
+    }
+    
+
+    if (contarminass === 0) {
+        // If no mines are adjacent, recursively check neighboring cells
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                if (row + i >= 0 && row + i < minas.length && col + j >= 0 && col + j < minas[0].length) {
+                    const boton = document.querySelector(`[data-row="${row + i}"][data-col="${col + j}"]`);
+                    if (boton && !boton.classList.contains('checked')) {
+                        contarminas(boton,false);
+                    }
+                }
+            }   
+        }
+    }
+}
+
+
 
 
 const minas = new Array(8);
