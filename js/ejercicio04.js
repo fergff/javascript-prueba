@@ -4,12 +4,17 @@ const colores = ['amarillo', 'azul', 'rojo', 'verde'];
 let puntuacion = 0;
 const puntaje = document.getElementById('puntaje');
 
+var highScore = localStorage.getItem('highScoreSimon'); //obtener highscore
+if (!highScore) highScore = 0;
+document.getElementById("high").innerHTML= "High Score : "+highScore;
+
 function empezar() { //pone todo a 0
     secuenciapulsada = [];
     secuencia=[];
     puntuacion=0;
     puntaje.innerHTML = puntuacion;
     generarSecuencia();
+    document.getElementById("bempezar").disabled = true;
 }
 
 function generarSecuencia() { 
@@ -21,14 +26,14 @@ function generarSecuencia() {
 async function reproducirSecuencia(index) {
     if (index < secuencia.length) {
         await parpadearColor(secuencia[index]);
-        await esperar(500); // Espera 1 segundo después de reproducir el color actual
-        reproducirSecuencia(index + 1); // Llama a la función recursivamente para reproducir el siguiente color
+        await esperar(500); // Espera 1 segundo despuï¿½s de reproducir el color actual
+        reproducirSecuencia(index + 1); // Llama a la funciï¿½n recursivamente para reproducir el siguiente color
     }
 }
 function boton(idBoton) {
     parpadearColor(idBoton);
     secuenciapulsada.push(idBoton);
-    if (secuencia.length === secuenciapulsada.length) { //cuando es igual el tamaño de las 2 secuencias comprueba
+    if (secuencia.length === secuenciapulsada.length) { //cuando es igual el tamaï¿½o de las 2 secuencias comprueba
         comprobar();
     }
 }
@@ -36,6 +41,7 @@ function boton(idBoton) {
 async function comprobar() {
     for (let i = 0; i < secuencia.length; i++) {
         if (secuencia[i] !== secuenciapulsada[i]) {// si no es igual
+            document.getElementById("bempezar").disabled = false;
             puntaje.innerHTML = "Simon Says";
             secuenciapulsada = [];
             puntuacion = 0;
@@ -49,6 +55,11 @@ async function comprobar() {
     secuenciapulsada.length = 0; // Limpia la secuencia pulsada
     await esperar(300);
     generarSecuencia(); // Genera la siguiente secuencia
+    if (puntuacion > highScore) { // si la puntacion el mas lato k highscore lo guardo
+        highScore = puntuacion;
+        localStorage.setItem('highScoreSimon', highScore);
+        document.getElementById("high").innerHTML= "High Score : "+highScore; // le aztulizo el highscore
+    }
 }
 
 async function parpadearColor(idBoton) {

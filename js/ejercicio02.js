@@ -19,17 +19,31 @@ let tirada =0;
                     ["b03", "b05", "b07"]
             ];
             function tirar(boton){
-                if(tirada%2==0){ //toca circulo
-                    boton.innerHTML="O";
-                    verificar("O");
-                }else{//toca cruz
-                    boton.innerHTML="X";
-                    verificar("X");
+                if(boton.innerHTML==""){
+                    if(tirada%2==0){ //toca circulo
+                        boton.innerHTML="O";
+                        verificar("O");
+                    }else{//toca cruz
+                        boton.innerHTML="X";
+                        verificar("X");
+                    }
+                    tirada++;
                 }
-                tirada++;
+                
             }
 
             function verificar(simbolo) {
+                let cuenta=0;
+                for (const boton of botones) {
+                    if(boton.innerHTML==""){
+                        cuenta++;
+                       
+                    }
+                }
+                if(cuenta==0){
+                    resultado.innerHTML = "Empate"
+                    terminado=true; 
+                }
                 
                 if(terminado){//si esta terminado k lo ponga todo como estaba
                     resultado.innerHTML = "3 en ralla"
