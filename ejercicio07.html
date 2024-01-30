@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Rick y Morty Api</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+    </head>
+
+    <body>
+        <div class=" bg-secondary text-white p-3 mx-5 d-flex justify-content-between">
+            <div>
+                <input type="number" class="border-0 p-1 rounded mx-2" name="" id="idpersonaje" placeholder="Buscar por ID">
+                <input type="text"  class="border-0 p-1 rounded  mx-2" name="" id="npersonaje" placeholder="Nombre Personaje">
+                <label class="ms-2" for="">Tipo: </label>
+                <select class="border-0 p-1 rounded me-2" name="species" id="species" onclick="getCharactersByName(value)">
+                    <option value=""></option>
+                    <option value="human">Human</option>
+                    <option value="alien">Alien</option>
+                    <option value="Humanoid">Humanoid</option>
+                    <option value="animal">Animal</option>
+                    <option value="Mythological">Mythological</option>
+                    <option value="robot">Robot</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+                <label class="ms-2" for="">Estado: </label>
+                <select class="border-0 p-1 rounded me-2" name="Estado" id="status" onclick="getCharactersByName(value)">
+                    <option value=""></option>
+                    <option value="alive">Vivo</option>
+                    <option value="dead">Muerto</option>
+                    <option value="unknown">no se sabe</option>
+                </select>
+            </div>
+            <button class="border-0 rounded py-1 px-4" onclick="buscar()"> Buscar </button>
+        </div>
+        <div class="mx-5 px-5 py-3 shadow">
+            
+            <h1>Personajes</h1>
+            <br/>
+            <div class="d-flex justify-content-center">
+                <div id="character-info" class="row">
+
+                </div>
+            </div>
+
+            <footer class="mt-3 d-flex justify-content-center bg-secondary">
+                <h1 class="text-white">Powered By : https://rickandmortyapi.com/</h1>
+            </footer>
+            
+        </div>
+
+
+        <script>
+            
+            getCharactersByName(`https://rickandmortyapi.com/api/character/?`);
+
+            function buscar(){
+                var idpersonaje = document.getElementById('idpersonaje').value;
+                var npersonaje = document.getElementById('npersonaje').value;
+                var status = document.getElementById('status').value;
+                var species = document.getElementById('species').value;
+                let apiUrl = `https://rickandmortyapi.com/api/character/?`;
+                 let cuenta =0;
+                if(idpersonaje> 0 && idpersonaje!= ""){
+                    //alert(idpersonaje);
+                    getCharacterInfo(idpersonaje);
+                }else{
+                    //alert("aaaa");
+                    if(npersonaje!= ""){
+                        if(cuenta!=0){
+                            apiUrl=apiUrl+`&`;
+                        }
+                        apiUrl=apiUrl+`name=${npersonaje}`;
+                        cuenta++;
+                    }
+                    if(status!=""){
+                        if(cuenta!=0){
+                            apiUrl=apiUrl+`&`;
+                        }
+                        apiUrl=apiUrl+`status=${status}`;
+                        cuenta++;
+                    }
+                    if(species!=""){
+                        if(cuenta!=0){
+                            apiUrl=apiUrl+`&`;
+                        }
+                        apiUrl=apiUrl+`species=${species}`;
+                        cuenta++;
+                    }
+                    if(cuenta==0){
+                        apiUrl = `https://rickandmortyapi.com/api/character`;
+                    }
+                    getCharactersByName(apiUrl);
+                }
+                //alert(apiUrl);
+            }
+
+        
+            var nada="human";
+            function getCharactersByName(apiUrl) {
+                fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Construye el HTML con la información de los personajes
+                    let charactersHtml = '';
+                    data.results.forEach(character => {
+                        charactersHtml += `
+                            <div class="col-4">
+                                <div class="card mb-3 border-2 border-warning">
+                                    <img src="${character.image}" class="card-img-top" alt="${character.name}">
+                                    <div class="card-body ">
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="card-title">${character.name}</h5>
+                                            <h5 class=""> Id: ${character.id}</h5>
+                                        </div>
+                                        <p class="m-0">Estado: ${character.status}</p>
+                                        <p class="m-0">Especie: ${character.species}</p>
+                                        <p class="m-0">Género: ${character.gender}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    // Inserta el HTML en el contenedor
+                    document.getElementById('character-info').innerHTML = charactersHtml;
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+            }
+    
+            // Llama a la función con el nombre del personaje que deseas obtener
+            //getCharactersByName(); 
+            function getCharacterInfo(characterId) {
+            const apiUrl = `https://rickandmortyapi.com/api/character/${characterId}`;
+
+            fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(character => {
+                // Construye el HTML con la información del personaje
+                const characterInfoHtml = `
+                    <div class="col-12">
+                        <div class="card mb-3 border-2 border-warning">
+                            <img src="${character.image}" class="card-img-top" alt="${character.name}">
+                            <div class="card-body ">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title">${character.name}</h5>
+                                    <h5 class=""> Id: ${character.id}</h5>
+                                </div>
+                                <p class="m-0">Estado: ${character.status}</p>
+                                <p class="m-0">Especie: ${character.species}</p>
+                                <p class="m-0">Género: ${character.gender}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Inserta el HTML en el contenedor
+                document.getElementById('character-info').innerHTML = characterInfoHtml;
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+        }
+        </script>
+    
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

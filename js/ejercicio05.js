@@ -1,107 +1,93 @@
 const tablero = document.getElementById('tablero');
+const minas = new Array(8).fill(null).map(() => new Array(8).fill(0));
+
+var titulo = document.getElementById('busca');
+
+// Coloca las minas de forma aleatoria
+for (let i = 0; i < 9; i++) {
+    const fila = Math.floor(Math.random() * 8);
+    const columna = Math.floor(Math.random() * 8);
+    minas[fila][columna] = '*';
+}
 
 // Crea el tablero con botones
-for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
+for (let fila = 0; fila < 8; fila++) {
+    for (let columna = 0; columna < 8; columna++) {
         const celda = document.createElement('button');
         celda.classList.add('celda');
-        celda.dataset.row = i;
-        celda.dataset.col = j;
+        celda.dataset.fila = fila;
+        celda.dataset.columna = columna;
         tablero.appendChild(celda);
     }
 }
-const celdas = document.querySelectorAll('.celda');
 
+// Agrega el evento clic a cada celda
+const celdas = document.querySelectorAll('.celda');
 celdas.forEach(celda => {
     celda.addEventListener('click', () => {
-        
-        alert("Celda clicada: " + celda.dataset.row + " " + celda.dataset.col);
-        alert(celda);
-        contarminas(celda , true);
-        
+        const fila = parseInt(celda.dataset.fila);
+        const columna = parseInt(celda.dataset.columna);
+        revisarCelda(fila, columna);
     });
 });
 
-function contarminas(celda ,deprimeras){
-
-    if (celda.classList.contains('checked')) { // para no hacer un bucle infinitoo
-        return;
+// Función para revisar una celda
+function revisarCelda(fila, columna) {
+    const celda = document.querySelector(`[data-fila="${fila}"][data-columna="${columna}"]`);
+    if (minas[fila][columna] === '*') {
+        celda.textContent = '*';
+        celda.classList.add('minas');
+        titulo.innerHTML = "Perdiste, Mierdass";
+        alert("BooooMMMM!!!");
+    } else {
+        const minasAdyacentes = contarMinasAdyacentes(fila, columna);
+        if (minasAdyacentes > 0) {
+            celda.textContent = minasAdyacentes;
+            celda.classList.add('checked');
+        } else {
+            celda.classList.add('checked');
+            revisarCeldasVecinas(fila, columna);
+            const celdasRevisadas = document.querySelectorAll('.celda.checked').length;
+            if (celdasRevisadas === 64 - 9) { // 64 es el total de celdas y 9 es el número de minas
+                alert("¡Has ganado WINNNNNN!");
+                titulo.innerHTML = "Ganaste";
+            }
+        }
     }
+}
 
-    let col = parseInt(celda.dataset.row);
-    let row = parseInt(celda.dataset.col);
-    let contarminass = 0;
-    let nohagas=true;
+// Función para contar minas adyacentes a una celda
+function contarMinasAdyacentes(fila, columna) {
+    let minasAdyacentes = 0;
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
-            // Check if neighboring cells exist
-            if (row + i >= 0 && row + i < minas.length && col + j >= 0 && col + j < minas[0].length) {
-                // Skip the current cell
-                if (i === 0 && j === 0) {
-                    if(minas[row][col] === "*"&& deprimeras){
-                        alert("boooooom");
-                        break;
-                        
-                    }else if(minas[row][col] === "*"&& !deprimeras){
-                        nohagas=false;
-                    }
-                    
-                    continue;
-                }
-                if (minas[row + i][col + j] === "*") {
-                    contarminass++;
+            const nuevaFila = fila + i;
+            const nuevaColumna = columna + j;
+            if (nuevaFila >= 0 && nuevaFila < 8 && nuevaColumna >= 0 && nuevaColumna < 8 && minas[nuevaFila][nuevaColumna] === '*') {
+                minasAdyacentes++;
+            }
+        }
+    }
+    return minasAdyacentes;
+}
+
+// Función recursiva para revisar celdas vecinas sin minas adyacentes
+function revisarCeldasVecinas(fila, columna) {
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            const nuevaFila = fila + i;
+            const nuevaColumna = columna + j;
+            if (nuevaFila >= 0 && nuevaFila < 8 && nuevaColumna >= 0 && nuevaColumna < 8) {
+                const celda = document.querySelector(`[data-fila="${nuevaFila}"][data-columna="${nuevaColumna}"]`);
+                if (!celda.classList.contains('checked')) {
+                    revisarCelda(nuevaFila, nuevaColumna);
                 }
             }
         }
     }
-    if(nohagas){
-        celda.innerHTML = contarminass;
-        celda.classList.add('checked'); // marca la celda checked
-    }
-    
-
-    if (contarminass === 0) {
-        // If no mines are adjacent, recursively check neighboring cells
-        for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-                if (row + i >= 0 && row + i < minas.length && col + j >= 0 && col + j < minas[0].length) {
-                    const boton = document.querySelector(`[data-row="${row + i}"][data-col="${col + j}"]`);
-                    if (boton && !boton.classList.contains('checked')) {
-                        contarminas(boton,false);
-                    }
-                }
-            }   
-        }
-    }
 }
 
-
-
-
-const minas = new Array(8);
-
-// Inicializa el array bidimensional
-for (let i = 0; i < 8; i++) {
-    minas[i] = new Array(8);
-}
-
-// Rellena el array con valores aleatorios
-for (let j = 0; j < 8; j++) {
-    let random1 = Math.floor(Math.random() * 8);
-    let random2 = Math.floor(Math.random() * 8);
-    if (minas[random1][random2] === "*") {
-        j--; // Si ya hay una mina en esta posición, intenta de nuevo
-    } else {
-        minas[random1][random2] = "*";
-    }
-}
-
-// PARA VER LAS MINAS
-for (let k = 0; k < minas.length; k++) {
-    for (let l = 0; l < minas[k].length; l++) {
-        if (minas[k][l] === "*") {
-            const boton = document.querySelector(`button[data-row="${l}"][data-col="${k}"]`);
-            boton.textContent = "*";
-        }
-    }
+// Función para reiniciar el juego
+function reiniciarJuego() {
+    window.location.reload();
 }

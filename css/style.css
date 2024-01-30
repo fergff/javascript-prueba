@@ -41,9 +41,17 @@ ul{
     width: 40px;
     height: 40px;
     border: 2px outset #777777; 
-    background-color: #eee; 
+    background-color: #cfcfcf; 
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 20px;
+}
+
+.checked {
+    background-color: #ebebeb;
+}
+.minas {
+    color: white;
+    background-color: rgb(252, 18, 18);
 }
